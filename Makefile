@@ -1,4 +1,4 @@
-CXX := g++
+CXX := clang++
 CXXFLAGS := -std=c++20 \
             -Wall -Wextra -Wpedantic \
             -Wconversion -Wsign-conversion \
@@ -10,8 +10,14 @@ CXXFLAGS := -std=c++20 \
             -Wdouble-promotion \
             -Wformat=2 
 
-# debugging
+# sanitizers
+CXXFLAGS += -fsanitize=address,undefined
+LDFLAGS  += -fsanitize=address,undefined
+
+# debug
 CXXFLAGS += -g3 -O0
+
+
 
 TARGET := target/a.out
 
@@ -23,7 +29,7 @@ CPPFLAGS := $(addprefix -I,$(INC))
 
 $(TARGET): $(OBJ)
 	@mkdir -p $(dir $@)
-	$(CXX) $(OBJ) -o $@
+	$(CXX) $(OBJ) -o $@ $(LDFLAGS)
 
 target/%.o: src/%.cpp
 	@mkdir -p $(dir $@)
