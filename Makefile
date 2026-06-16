@@ -17,8 +17,6 @@ LDFLAGS  += -fsanitize=address,undefined
 # debug
 CXXFLAGS += -g3 -O0
 
-
-
 TARGET := target/a.out
 
 SRC := $(shell find src -name '*.cpp')

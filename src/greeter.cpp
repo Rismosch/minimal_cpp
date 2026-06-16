@@ -2,6 +2,4 @@
 
 #include <iostream>
 
-void Greeter::greet() {
-    std::cout << "hello :)\n";
-}
+void Greeter::greet() { std::cout << "hello :)\n"; }
