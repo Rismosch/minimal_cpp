@@ -24,8 +24,11 @@ endif
 
 TARGET := target/a.out
 
-SRC := $(shell find src -name '*.cpp')
-INC := $(shell find include -type d)
+SRC := \
+	src/greeter.cpp \
+	src/main.cpp
+INC := \
+	include
 OBJ := $(patsubst src/%.cpp,target/%.o,$(SRC))
 
 CPPFLAGS := $(addprefix -I,$(INC))
