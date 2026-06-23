@@ -13,23 +13,33 @@ CXXFLAGS := -std=c++20 \
 DEBUG ?= 1
 
 ifeq ($(DEBUG), 1)
+	TARGET_DIR = target/debug
+
 	CXXFLAGS += -g3 -Og
 	CXXFLAGS += -fsanitize=address,undefined
+	CXXFLAGS += -D_GLIBCXX_ASSERTIONS
+	
 	LDFLAGS  += -fsanitize=address,undefined
 else
+	TARGET_DIR = target/release
+
 	CXXFLAGS += -O3 -DNDEBUG -flto
-	CXXFLAGS += -march=native # use all available CPU instruction (breaks portability)
+	# use all available CPU instruction (breaks portability)
+	CXXFLAGS += -march=native 
+
 	LDFLAGS += -flto
 endif
 
-TARGET := target/a.out
+TARGET := $(TARGET_DIR)/a.out
 
 SRC := \
 	src/greeter.cpp \
-	src/main.cpp
+	src/main.cpp \
+	# add source files here
 INC := \
-	include
-OBJ := $(patsubst src/%.cpp,target/%.o,$(SRC))
+	include \
+	# add include files here
+OBJ := $(patsubst src/%.cpp,$(TARGET_DIR)/%.o,$(SRC))
 
 CPPFLAGS := $(addprefix -I,$(INC))
 
@@ -39,7 +49,7 @@ $(TARGET): $(OBJ)
 	@mkdir -p $(dir $@)
 	$(CXX) $(OBJ) -o $@ $(LDFLAGS)
 
-target/%.o: src/%.cpp
+$(TARGET_DIR)/%.o: src/%.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
