@@ -10,12 +10,17 @@ CXXFLAGS := -std=c++20 \
             -Wdouble-promotion \
             -Wformat=2 
 
-# sanitizers
-CXXFLAGS += -fsanitize=address,undefined
-LDFLAGS  += -fsanitize=address,undefined
+DEBUG ?= 1
 
-# debug
-CXXFLAGS += -g3 -O0
+ifeq ($(DEBUG), 1)
+	CXXFLAGS += -g3 -Og
+	CXXFLAGS += -fsanitize=address,undefined
+	LDFLAGS  += -fsanitize=address,undefined
+else
+	CXXFLAGS += -O3 -DNDEBUG -flto
+	CXXFLAGS += -march=native # use all available CPU instruction (breaks portability)
+	LDFLAGS += -flto
+endif
 
 TARGET := target/a.out
 
@@ -25,6 +30,8 @@ OBJ := $(patsubst src/%.cpp,target/%.o,$(SRC))
 
 CPPFLAGS := $(addprefix -I,$(INC))
 
+all: $(TARGET)
+
 $(TARGET): $(OBJ)
 	@mkdir -p $(dir $@)
 	$(CXX) $(OBJ) -o $@ $(LDFLAGS)
@@ -33,10 +40,16 @@ target/%.o: src/%.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
-run: $(TARGET)
-	./$(TARGET)
+debug:
+	$(MAKE) DEBUG=1
+
+release:
+	$(MAKE) DEBUG=0
 
 clean:
 	rm -rf target
 
-.PHONY: clean
+run: $(TARGET)
+	./$(TARGET)
+
+.PHONY: all debug release clean run
