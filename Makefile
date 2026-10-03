@@ -1,14 +1,21 @@
 CXX := clang++
 CXXFLAGS := -std=c++20 \
-            -Wall -Wextra -Wpedantic \
-            -Wconversion -Wsign-conversion \
-            -Wshadow \
-            -Wold-style-cast \
-            -Wnon-virtual-dtor \
-            -Woverloaded-virtual \
-            -Wnull-dereference \
-            -Wdouble-promotion \
-            -Wformat=2 
+						-Wall \
+						-Wcast-align \
+						-Wconversion \
+						-Wdouble-promotion \
+						-Wextra \
+						-Wformat=2 \
+						-Wmisleading-indentation \
+						-Wnon-virtual-dtor \
+						-Wnull-dereference \
+						-Wold-style-cast \
+						-Woverloaded-virtual \
+						-Wpedantic \
+						-Wshadow \
+						-Wsign-conversion \
+						-Wunused
+
 
 DEBUG ?= 1
 
